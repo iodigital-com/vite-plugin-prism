@@ -39,7 +39,7 @@ import { defineNuxtConfig } from "nuxt";
 export default defineNuxtConfig({
   modules: [
     [
-      "@iodigital/vite-plugin-prism",
+      "@iodigital/vite-plugin-prism/dist/nuxt",
       {
         specFilePathOrObject:
           "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
@@ -48,7 +48,7 @@ export default defineNuxtConfig({
   ],
 
   // or
-  modules: ["@iodigital/vite-plugin-prism"],
+  modules: ["@iodigital/vite-plugin-prism/dist/nuxt"],
   prism: {
     specFilePathOrObject:
       "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
@@ -60,7 +60,6 @@ export default defineNuxtConfig({
 
 ```ts
 interface PrismPluginOptions {
-  
   // Base path for API
   // Default: /api
   route?: string;
