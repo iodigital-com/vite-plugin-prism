@@ -6,9 +6,8 @@
     "moduleResolution": "NodeNext",
     "outDir": "dist",
     "declaration": true,
-    "paths": {
-      "fp-ts/*": ["./node_modules/fp-ts/*"]
-    }
+    "skipLibCheck": true
   },
-  "include": ["./src/**/*.ts", "src/**/*.d.ts"]
+  "files": ["src/index.ts", "src/nuxt.ts"],
+  "exclude": ["node_modules"]
 }

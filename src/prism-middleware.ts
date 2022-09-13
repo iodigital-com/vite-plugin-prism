@@ -5,11 +5,7 @@ import type { PrismHttp } from "@stoplight/prism-http/dist/client.js";
 import type { IHttpNameValue } from "@stoplight/prism-http";
 import type { HttpMethod } from "@stoplight/types";
 
-export const createPrismMiddleware = (
-  client: PrismHttp,
-  serverOrigin: string,
-  prismPath = "/api"
-): NextHandleFunction => {
+export const createPrismMiddleware = (client: PrismHttp, prismPath?: string): NextHandleFunction => {
   return async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
     try {
       if (!req.method || !req.url || !req.url.startsWith(prismPath)) {
