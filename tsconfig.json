@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist",
+    "declaration": true,
+    "paths": {
+      "fp-ts/*": ["./node_modules/fp-ts/*"]
+    }
+  },
+  "include": ["./src/**/*.ts", "src/**/*.d.ts"]
+}

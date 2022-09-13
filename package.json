@@ -1,0 +1,55 @@
+{
+  "name": "@iodigital/vite-plugin-prism",
+  "description": "Prism, OpenAPI mocking server, integration for Vite",
+  "version": "0.1.0",
+  "author": {
+    "name": "iO",
+    "website": "https://iodigital.com"
+  },
+  "repository": "https://github.com/iodigital-com/vite-plugin-prism",
+  "keywords": [
+    "vite",
+    "stoplight",
+    "prism",
+    "openapi"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
+    "lint": "eslint --ext .js,.vue,.ts --fix --ignore-path .gitignore .",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@stoplight/prism-cli": "^4.10.3",
+    "@stoplight/prism-http": "^4.10.3",
+    "body-parser": "^1.20.0",
+    "defu": "^6.1.0",
+    "pino": "^8.5.0"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.3",
+    "@stoplight/prism-core": "^4.10.3",
+    "@stoplight/types": "^13.6.0",
+    "@types/body-parser": "^1.19.2",
+    "@types/connect": "^3.4.35",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "fp-ts": "^2.12.3",
+    "husky": "^8.0.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4",
+    "vite": "^2.9.9"
+  },
+  "workspaces": [
+    "examples/**"
+  ]
+}
