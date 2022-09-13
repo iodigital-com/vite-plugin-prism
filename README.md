@@ -107,7 +107,7 @@ curl http://localhost:3000/api/pets
 
 ```
 npm run build
-cd examples/with-vite
+cd examples/with-nuxt
 npm run dev
 curl http://localhost:3000/api/pets
 ```
