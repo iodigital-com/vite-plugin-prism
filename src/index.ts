@@ -1,7 +1,7 @@
 import type { Plugin } from "vite";
 import { defu } from "defu";
 import bodyParser from "body-parser";
-import { createPrismMiddleware } from "./prism-middleware.js";
+import { createPrismMiddleware } from "./prism-vite-middleware.js";
 import { getPrismClient, type PrismPluginOptions } from "./shared.js";
 
 export const defaultConfig = {

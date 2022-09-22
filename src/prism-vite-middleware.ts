@@ -16,12 +16,14 @@ export const createPrismMiddleware = (client: PrismHttp, prismPath?: string): Ne
         // If sanitizedUrl is an empty string, say it's the root path
         const requestUrl = sanitizedUrl.length ? sanitizedUrl : "/";
         const method = req.method.toLocaleLowerCase();
-        const { headers } = req;
+        // @ts-ignore
+        const { headers, body } = req;
 
         client
           .request(requestUrl, {
             headers: headers as IHttpNameValue,
             method: method as HttpMethod,
+            body,
           })
           .then((mockedResponse) => {
             res.writeHead(mockedResponse.status, { ...mockedResponse.headers });
@@ -33,7 +35,7 @@ export const createPrismMiddleware = (client: PrismHttp, prismPath?: string): Ne
             } else {
               console.error(error);
               res.writeHead(error.status);
-              res.end();
+              res.end(JSON.stringify({ ...error }));
             }
           });
       }
