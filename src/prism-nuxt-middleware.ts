@@ -18,7 +18,7 @@ export const createPrismMiddleware =
       const requestUrl = sanitizedUrl.length ? sanitizedUrl : "/";
       const method = req.method.toLowerCase();
       const { headers } = req;
-      const body = ["put", "post"].includes(method) && (await readBody(event));
+      const body = ["put", "post", "patch"].includes(method) && (await readBody(event));
 
       client
         .request(requestUrl, {
