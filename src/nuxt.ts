@@ -1,6 +1,6 @@
 import { defineNuxtModule, addDevServerHandler } from "@nuxt/kit";
-import { createPrismMiddleware } from "./prism-nuxt-middleware.js";
-import { getPrismClient, PrismPluginOptions } from "./shared.js";
+import { createPrismNuxtMiddleware } from "./prism-nuxt-middleware.js";
+import { getPrismClient, PrismPluginOptions } from "./client.js";
 
 export default defineNuxtModule<Partial<PrismPluginOptions>>({
   meta: {
@@ -23,10 +23,9 @@ export default defineNuxtModule<Partial<PrismPluginOptions>>({
       if (!config.specFilePathOrObject) {
         throw new Error("specFilePathOrObject is not defined. Cannot start Prism Dev Server");
       }
-      const client = await getPrismClient(config as PrismPluginOptions);
       addDevServerHandler({
         route: config.route,
-        handler: createPrismMiddleware(client, "/"),
+        handler: createPrismNuxtMiddleware(config, "/"),
       });
     } catch (error) {
       console.error(error);

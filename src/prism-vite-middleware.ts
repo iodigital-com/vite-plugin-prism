@@ -4,45 +4,20 @@ import type { IncomingMessage, ServerResponse } from "http";
 import type { PrismHttp } from "@stoplight/prism-http/dist/client.js";
 import type { IHttpNameValue } from "@stoplight/prism-http";
 import type { HttpMethod } from "@stoplight/types";
+import { PrismPluginOptions } from "./client.js";
+import { createPrismMiddleware } from "./prism-middleware.js";
 
-export const createPrismMiddleware = (client: PrismHttp, prismPath?: string): NextHandleFunction => {
+export const createVitePrismMiddleware = (
+  config: Partial<PrismPluginOptions>,
+  prismPath?: string
+): NextHandleFunction => {
   return async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
-    try {
-      if (!req.method || !req.url || !req.url.startsWith(prismPath)) {
-        next();
-      } else {
-        // Remove dev-server base from URL
-        const sanitizedUrl = req?.url.replace(prismPath, "");
-        // If sanitizedUrl is an empty string, say it's the root path
-        const requestUrl = sanitizedUrl.length ? sanitizedUrl : "/";
-        const method = req.method.toLocaleLowerCase();
-        // @ts-ignore
-        const { headers, body } = req;
-
-        client
-          .request(requestUrl, {
-            headers: headers as IHttpNameValue,
-            method: method as HttpMethod,
-            body,
-          })
-          .then((mockedResponse) => {
-            res.writeHead(mockedResponse.status, { ...mockedResponse.headers });
-            res.end(JSON.stringify(mockedResponse.data));
-          })
-          .catch((error) => {
-            if (!error.status) {
-              throw new Error(error);
-            } else {
-              console.error(error);
-              res.writeHead(error.status);
-              res.end(JSON.stringify({ ...error }));
-            }
-          });
-      }
-    } catch (error) {
-      res.statusCode = 500;
-      console.error(error);
-      res.end();
+    if (!req.method || !req.url || !req.url.startsWith(prismPath)) {
+      next();
+    } else {
+      // @ts-ignore
+      const { body } = req;
+      createPrismMiddleware({ req, res, prismPath, body, config });
     }
   };
 };
