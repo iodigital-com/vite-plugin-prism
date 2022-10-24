@@ -23,7 +23,7 @@
     "dev": "tsc --watch",
     "build": "tsc",
     "lint": "eslint --ext .js,.vue,.ts --fix --ignore-path .gitignore .",
-    "prepublish": "npm run lint && npm run build",
+    "prepublishOnly": "npm run lint && npm run build",
     "prepare": "husky install"
   },
   "dependencies": {
