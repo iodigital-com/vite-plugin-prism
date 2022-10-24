@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { NextFunction, NextHandleFunction } from "connect";
 import type { IncomingMessage, ServerResponse } from "http";
-import type { PrismHttp } from "@stoplight/prism-http/dist/client.js";
-import type { IHttpNameValue } from "@stoplight/prism-http";
-import type { HttpMethod } from "@stoplight/types";
 import { PrismPluginOptions } from "./client.js";
 import { createPrismMiddleware } from "./prism-middleware.js";
 

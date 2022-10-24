@@ -45,6 +45,7 @@ export const getLogger = (enabled = false) => {
     },
     logStream
   );
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   logInstance.success = logInstance.info;
   pipeOutputToSignale(logStream);

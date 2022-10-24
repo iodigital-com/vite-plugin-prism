@@ -1,6 +1,6 @@
 import { defineNuxtModule, addDevServerHandler } from "@nuxt/kit";
 import { createPrismNuxtMiddleware } from "./prism-nuxt-middleware.js";
-import { getPrismClient, PrismPluginOptions } from "./client.js";
+import { PrismPluginOptions } from "./client.js";
 
 export default defineNuxtModule<Partial<PrismPluginOptions>>({
   meta: {

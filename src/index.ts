@@ -2,7 +2,7 @@ import type { Plugin } from "vite";
 import { defu } from "defu";
 import bodyParser from "body-parser";
 import { createVitePrismMiddleware } from "./prism-vite-middleware.js";
-import { getPrismClient, type PrismPluginOptions } from "./client.js";
+import { type PrismPluginOptions } from "./client.js";
 
 export const defaultConfig = {
   route: "/api",

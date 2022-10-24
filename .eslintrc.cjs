@@ -1,4 +1,3 @@
-const tsConfig = require("./tsconfig.json");
 const tsConfigExamples = require("./tsconfig.examples.json");
 
 require("@rushstack/eslint-patch/modern-module-resolution");
@@ -9,6 +8,7 @@ module.exports = {
   env: {
     es6: true,
   },
+  ignorePatterns: ["*.vue"],
   overrides: [
     {
       files: ["*.js"],
@@ -23,7 +23,7 @@ module.exports = {
       },
     },
     {
-      files: [...tsConfig.include],
+      files: ["src/**/*.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
         sourceType: "module",

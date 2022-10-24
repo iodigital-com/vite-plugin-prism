@@ -7,7 +7,7 @@ interface IPrismMiddlewareOptions {
   req: IncomingMessage;
   res: ServerResponse;
   prismPath: string;
-  body?: any;
+  body?: unknown;
   config: Partial<PrismPluginOptions>;
 }
 
