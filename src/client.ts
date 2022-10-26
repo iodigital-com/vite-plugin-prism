@@ -59,8 +59,8 @@ export type PrismConfig = IHttpConfig & {
 
 export interface PrismPluginOptions {
   route?: string;
-  specFilePathOrObject: string | object;
-  prismConfig?: PrismConfig;
+  specFilePathOrObject: string | string[] | object | object[];
+  prismConfig?: Partial<PrismConfig>;
   debug?: boolean;
 }
 
@@ -76,12 +76,22 @@ export const getDefaultPrismConfig = (debug?: boolean): Partial<PrismConfig> => 
   };
 };
 
+const getHttpOperationsFromSpecs = async (specFilePathOrObject: PrismPluginOptions["specFilePathOrObject"]) => {
+  if (Array.isArray(specFilePathOrObject)) {
+    const operationBundles = await Promise.all(
+      specFilePathOrObject.map((spec: string | object) => getHttpOperationsFromSpec(spec))
+    );
+    return operationBundles.flat();
+  }
+  return getHttpOperationsFromSpec(specFilePathOrObject);
+};
+
 export const getPrismClient = async (
   config: Partial<PrismPluginOptions>,
   req: Pick<IHttpRequest, "headers" | "url">
 ) => {
   const { specFilePathOrObject, debug, prismConfig } = config;
-  const operations = await getHttpOperationsFromSpec(specFilePathOrObject);
+  const operations = await getHttpOperationsFromSpecs(specFilePathOrObject);
   const defaultPrismConfig = getDefaultPrismConfig(debug);
   const requestConfig = { mock: getHttpConfigFromRequest(req).right };
   const mergedConfig = defu(requestConfig, prismConfig, defaultPrismConfig);
