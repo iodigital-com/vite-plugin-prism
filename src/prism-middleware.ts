@@ -25,7 +25,7 @@ export const createPrismMiddleware = async ({ req, res, prismPath, config, body 
     };
     const client = await getPrismClient(config, prismRequest);
 
-    client
+    return client
       .request(requestUrl, {
         headers: headers as IHttpNameValue,
         method: method as HttpMethod,
@@ -34,6 +34,7 @@ export const createPrismMiddleware = async ({ req, res, prismPath, config, body 
       .then((mockedResponse) => {
         res.writeHead(mockedResponse.status, { ...mockedResponse.headers });
         res.end(JSON.stringify(mockedResponse.data));
+        return res;
       })
       .catch((error) => {
         if (!error.status) {
@@ -42,11 +43,13 @@ export const createPrismMiddleware = async ({ req, res, prismPath, config, body 
           console.error(error);
           res.statusCode = error.status;
           res.end(JSON.stringify({ ...error }));
+          return res;
         }
       });
   } catch (error) {
     res.statusCode = 500;
     console.error(error);
     res.end();
+    return res;
   }
 };
