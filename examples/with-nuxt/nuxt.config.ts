@@ -6,11 +6,13 @@ export default defineNuxtConfig({
   modules: [
     [
       "../../dist/nuxt",
-      {
-        specFilePathOrObject:
-          "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
-        debug: true,
-      },
+      [
+        {
+          specFilePathOrObject:
+            "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
+          debug: true,
+        },
+      ],
     ],
   ],
 });

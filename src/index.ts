@@ -8,15 +8,21 @@ export const defaultConfig = {
   route: "/api",
 };
 
-const vitePluginPrism = (config: PrismPluginOptions): Plugin => ({
+const vitePluginPrism = (moduleConfig: Partial<PrismPluginOptions>[]): Plugin => ({
   name: "vite-plugin-prism:middleware",
   async configureServer(devServer) {
-    const resolvedConfig = defu(config, defaultConfig);
     devServer.middlewares.use(bodyParser.json({ strict: false }));
     devServer.middlewares.use(bodyParser.raw());
     devServer.middlewares.use(bodyParser.text());
     devServer.middlewares.use(bodyParser.urlencoded());
-    devServer.middlewares.use(createVitePrismMiddleware(config, resolvedConfig.route));
+
+    moduleConfig.forEach((config) => {
+      const resolvedConfig = defu(config, defaultConfig);
+      if (!config.specFilePathOrObject) {
+        throw new Error("specFilePathOrObject is not defined. Cannot start Prism Dev Server");
+      }
+      devServer.middlewares.use(createVitePrismMiddleware(config, resolvedConfig.route));
+    });
   },
 });
 

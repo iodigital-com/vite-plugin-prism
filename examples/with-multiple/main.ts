@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-fetch(window.location.origin + "/api/pets")
+fetch(window.location.origin + "/api-one/pets")
   .then((res) => res.json())
   .then((json) => {
     const $list = document.getElementById("list");
@@ -9,7 +9,7 @@ fetch(window.location.origin + "/api/pets")
     }
   });
 
-fetch(window.location.origin + "/api/pets/123")
+fetch(window.location.origin + "/api-two/pets/123")
   .then((res) => res.json())
   .then((json) => {
     const $single = document.getElementById("single");

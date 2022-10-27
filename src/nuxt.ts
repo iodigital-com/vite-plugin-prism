@@ -2,7 +2,7 @@ import { defineNuxtModule, addDevServerHandler } from "@nuxt/kit";
 import { createPrismNuxtMiddleware } from "./prism-nuxt-middleware.js";
 import { PrismPluginOptions } from "./client.js";
 
-export default defineNuxtModule<Partial<PrismPluginOptions>>({
+export default defineNuxtModule<Partial<PrismPluginOptions>[]>({
   meta: {
     // Usually  npm package name of your module
     name: "@iodigital/vite-plugin-prism",
@@ -15,17 +15,17 @@ export default defineNuxtModule<Partial<PrismPluginOptions>>({
     },
   },
   // Default configuration options for your module
-  defaults: {
-    route: "/api",
-  },
-  async setup(config) {
+  defaults: [],
+  async setup(moduleConfig) {
     try {
-      if (!config.specFilePathOrObject) {
-        throw new Error("specFilePathOrObject is not defined. Cannot start Prism Dev Server");
-      }
-      addDevServerHandler({
-        route: config.route,
-        handler: createPrismNuxtMiddleware(config, "/"),
+      Object.values(moduleConfig).forEach((config) => {
+        if (!config.specFilePathOrObject) {
+          throw new Error("specFilePathOrObject is not defined. Cannot start Prism Dev Server");
+        }
+        addDevServerHandler({
+          route: config.route || "/api",
+          handler: createPrismNuxtMiddleware(config, "/"),
+        });
       });
     } catch (error) {
       console.error(error);
