@@ -24,8 +24,9 @@
     "build": "tsc",
     "lint": "eslint --ext .js,.vue,.ts --fix --ignore-path .gitignore .",
     "test": "npx playwright test",
-    "prepublishOnly": "npm run lint && npm run build",
-    "prepare": "husky install"
+    "prepublishOnly": "npm run lint && npm run test && npm run build",
+    "prepare": "husky install",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.9",
