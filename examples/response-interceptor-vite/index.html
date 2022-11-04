@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vite-plugin-prism</title>
+  </head>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-family: sans-serif;
+    }
+
+    body {
+      padding: 1.5rem;
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 1.5rem;
+    }
+  </style>
+  <body>
+    <h1>Server response for /pets/:</h1>
+    <pre id="app"></pre>
+
+    <h1>Server response for /pets/123:</h1>
+    <pre id="app2"></pre>
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>
