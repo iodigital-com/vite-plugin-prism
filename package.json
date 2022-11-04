@@ -23,7 +23,7 @@
     "dev": "tsc --watch",
     "build": "tsc",
     "lint": "eslint --ext .js,.vue,.ts --fix --ignore-path .gitignore .",
-    "test": "npx playwright test",
+    "test": "npx playwright test -c tests/playwright.config.ts",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
     "prepare": "husky install",
     "postinstall": "npm run build"

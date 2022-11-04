@@ -33,6 +33,16 @@ module.exports = {
       extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
     },
     {
+      files: ["tests/**/*.ts"],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        sourceType: "module",
+        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.test.json"],
+      },
+      extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
+    },
+    {
       files: [...tsConfigExamples.include],
       parser: "@typescript-eslint/parser",
       parserOptions: {

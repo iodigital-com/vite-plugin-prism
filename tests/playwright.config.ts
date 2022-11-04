@@ -18,11 +18,12 @@ export const getWebServerConfig = ({ port, cwd }: GetWebServerConfigOptions) => 
 });
 
 const config: PlaywrightTestConfig = {
-  reporter: [["list"], ["junit", { outputFile: "tests/test-results.xml" }]],
+  testDir: "../tests",
+  reporter: [["list"], ["junit", { outputFile: "test-results.xml" }]],
   webServer: [
-    getWebServerConfig({ port: 3001, cwd: "examples/with-multiple" }),
-    getWebServerConfig({ port: 3002, cwd: "examples/with-nuxt" }),
-    getWebServerConfig({ port: 3003, cwd: "examples/with-vite" }),
+    getWebServerConfig({ port: 3001, cwd: "../examples/with-multiple" }),
+    getWebServerConfig({ port: 3002, cwd: "../examples/with-nuxt" }),
+    getWebServerConfig({ port: 3003, cwd: "../examples/with-vite" }),
   ],
 };
 
