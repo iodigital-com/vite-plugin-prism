@@ -21,11 +21,13 @@ import prism from "@iodigital/vite-plugin-prism";
 // Pass them to plugin
 export default defineConfig({
   plugins: [
-    prism({
-      // OpenAPI doc
-      specFilePathOrObject:
-        "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
-    }),
+    prism([
+      {
+        // OpenAPI doc
+        specFilePathOrObject:
+          "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
+      },
+    ]),
   ],
 });
 ```
@@ -40,19 +42,23 @@ export default defineNuxtConfig({
   modules: [
     [
       "@iodigital/vite-plugin-prism/dist/nuxt",
-      {
-        specFilePathOrObject:
-          "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
-      },
+      [
+        {
+          specFilePathOrObject:
+            "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
+        },
+      ],
     ],
   ],
 
   // or
   modules: ["@iodigital/vite-plugin-prism/dist/nuxt"],
-  prism: {
-    specFilePathOrObject:
-      "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
-  },
+  prism: [
+    {
+      specFilePathOrObject:
+        "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
+    },
+  ],
 });
 ```
 
