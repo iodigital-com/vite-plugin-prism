@@ -6,7 +6,7 @@
     "moduleResolution": "NodeNext",
     "outDir": "dist",
     "declaration": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "files": ["src/index.ts", "src/nuxt.ts"],
   "exclude": ["node_modules"]
