@@ -13,7 +13,7 @@ interface IPrismMiddlewareOptions {
   config: Partial<PrismPluginOptions>;
 }
 
-const getOperationByRequest = async ({requestUrl, method, config}) => {
+const getOperationByRequest = async ({ requestUrl, method, config }) => {
   const operations = await getHttpOperationsFromSpecs(config.specFilePathOrObject);
   return operations.filter(operation => {
     return matchPath(requestUrl, operation.path).right !== 'no-match' && method === operation.method;
@@ -44,7 +44,7 @@ export const createPrismMiddleware = async ({ req, res, prismPath, config, body 
         // get the operation from this response
         const operation = await getOperationByRequest({ requestUrl, method, config });
         // use it to get the interceptor
-        const interceptedResponse = await f({config, operation, mockedResponse});
+        const interceptedResponse = await f({ config, operation, mockedResponse });
         res.writeHead(interceptedResponse.status, { ...interceptedResponse.headers });
         res.end(JSON.stringify(interceptedResponse.data));
         return res;
