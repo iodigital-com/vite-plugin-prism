@@ -1,7 +1,7 @@
 import type { IHttpOperation, IHttpRequest } from "@stoplight/types";
 import type { PromiseType, Overwrite } from "utility-types";
 import { PrismHttp } from "@stoplight/prism-http/dist/client.js";
-import { camelCase } from "lodash-es";
+import camelCase from "lodash-es/camelCase";
 import { PrismPluginOptions } from "./client.js";
 import chalk from "chalk";
 
@@ -45,7 +45,7 @@ export async function prismResponseInterceptor({ config, operation, output }: Pr
     interceptors && Object.entries(interceptors).find(([key]) => key === `${camelCase(operation.iid)}Response`)?.[1];
 
   if (interceptor) {
-    console.debug(
+    console.log(
       "PRISM",
       chalk.black.bgHex("#818cf8")(`[INTERCEPTOR]`),
       `Running response interceptor for ${operation.iid}`
