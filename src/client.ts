@@ -11,6 +11,7 @@ import signale from "signale";
 import split from "split2";
 import { PassThrough, Readable } from "stream";
 import chalk from "chalk";
+import { PrismResponseInterceptor } from "./prism-interceptors.js";
 
 type PrismLogDescriptor = LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; offset?: number; input: IHttpRequest };
 
@@ -62,6 +63,7 @@ export interface PrismPluginOptions {
   specFilePathOrObject: string | string[] | object | object[];
   prismConfig?: Partial<PrismConfig>;
   debug?: boolean;
+  interceptors?: Record<string, PrismResponseInterceptor<any, any>>;
 }
 
 export const getDefaultPrismConfig = (debug?: boolean): Partial<PrismConfig> => {
@@ -76,7 +78,7 @@ export const getDefaultPrismConfig = (debug?: boolean): Partial<PrismConfig> => 
   };
 };
 
-const getHttpOperationsFromSpecs = async (specFilePathOrObject: PrismPluginOptions["specFilePathOrObject"]) => {
+export const getHttpOperationsFromSpecs = async (specFilePathOrObject: PrismPluginOptions["specFilePathOrObject"]) => {
   if (Array.isArray(specFilePathOrObject)) {
     const operationBundles = await Promise.all(
       specFilePathOrObject.map((spec: string | object) => getHttpOperationsFromSpec(spec))
@@ -95,5 +97,10 @@ export const getPrismClient = async (
   const defaultPrismConfig = getDefaultPrismConfig(debug);
   const requestConfig = { mock: getHttpConfigFromRequest(req).right };
   const mergedConfig = defu(requestConfig, prismConfig, defaultPrismConfig);
-  return createClientFromOperations(operations, mergedConfig);
+  const client = createClientFromOperations(operations, mergedConfig);
+  return {
+    client,
+    config: { ...config, prismConfig: mergedConfig },
+    operations,
+  };
 };

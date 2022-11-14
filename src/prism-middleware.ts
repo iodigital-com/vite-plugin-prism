@@ -1,7 +1,9 @@
 import { IHttpNameValue, IHttpRequest } from "@stoplight/prism-http";
-import { HttpMethod } from "@stoplight/types";
+import { HttpMethod, IHttpOperation } from "@stoplight/types";
+import { matchPath } from "@stoplight/prism-http/dist/router/matchPath.js";
 import type { IncomingMessage, ServerResponse } from "http";
 import { getPrismClient, PrismPluginOptions } from "./client.js";
+import { prismResponseInterceptor } from "./prism-interceptors.js";
 
 interface IPrismMiddlewareOptions {
   req: IncomingMessage;
@@ -11,10 +13,24 @@ interface IPrismMiddlewareOptions {
   config: Partial<PrismPluginOptions>;
 }
 
+const getOperationByRequest = async ({
+  requestUrl,
+  method,
+  operations,
+}: {
+  requestUrl: string;
+  method: string;
+  operations: IHttpOperation[];
+}) => {
+  return operations.filter((operation) => {
+    return matchPath(requestUrl, operation.path).right !== "no-match" && method === operation.method;
+  })[0];
+};
+
 export const createPrismMiddleware = async ({ req, res, prismPath, config, body }: IPrismMiddlewareOptions) => {
   try {
     // Remove dev-server base from URL
-    const sanitizedUrl = req?.url.replace(prismPath, "");
+    const sanitizedUrl = req?.url.replace(config.route, "");
     // If sanitizedUrl is an empty string, say it's the root path
     const requestUrl = sanitizedUrl.length ? sanitizedUrl : "/";
     const { headers } = req;
@@ -23,7 +39,8 @@ export const createPrismMiddleware = async ({ req, res, prismPath, config, body 
       headers: req.headers as IHttpNameValue,
       url: { path: requestUrl },
     };
-    const client = await getPrismClient(config, prismRequest);
+    const { client, config: fullConfig, operations } = await getPrismClient(config, prismRequest);
+    const operation = await getOperationByRequest({ requestUrl, method, operations });
 
     return client
       .request(requestUrl, {
@@ -31,9 +48,10 @@ export const createPrismMiddleware = async ({ req, res, prismPath, config, body 
         method: method as HttpMethod,
         body,
       })
-      .then((mockedResponse) => {
-        res.writeHead(mockedResponse.status, { ...mockedResponse.headers });
-        res.end(JSON.stringify(mockedResponse.data));
+      .then(async (output) => {
+        const interceptedOutput = await prismResponseInterceptor({ operation, output, config: fullConfig });
+        res.writeHead(interceptedOutput.status, { ...interceptedOutput.headers });
+        res.end(JSON.stringify(interceptedOutput.data));
         return res;
       })
       .catch((error) => {

@@ -21,9 +21,11 @@ const vitePluginPrism = (moduleConfig: Partial<PrismPluginOptions>[]): Plugin =>
       if (!config.specFilePathOrObject) {
         throw new Error("specFilePathOrObject is not defined. Cannot start Prism Dev Server");
       }
-      devServer.middlewares.use(createVitePrismMiddleware(config, resolvedConfig.route));
+      devServer.middlewares.use(createVitePrismMiddleware({ config: resolvedConfig, prismPath: resolvedConfig.route }));
     });
   },
 });
 
 export default vitePluginPrism;
+
+export { definePrismResponseInterceptor } from "./prism-interceptors.js";

@@ -24,6 +24,7 @@ const config: PlaywrightTestConfig = {
     getWebServerConfig({ port: 3001, cwd: "../examples/with-multiple" }),
     getWebServerConfig({ port: 3002, cwd: "../examples/with-nuxt" }),
     getWebServerConfig({ port: 3003, cwd: "../examples/with-vite" }),
+    getWebServerConfig({ port: 3004, cwd: "../examples/with-interceptors-vite" }),
   ],
 };
 

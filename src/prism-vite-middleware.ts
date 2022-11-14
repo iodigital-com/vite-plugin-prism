@@ -4,17 +4,19 @@ import type { IncomingMessage, ServerResponse } from "http";
 import { PrismPluginOptions } from "./client.js";
 import { createPrismMiddleware } from "./prism-middleware.js";
 
-export const createVitePrismMiddleware = (
-  config: Partial<PrismPluginOptions>,
-  prismPath?: string
-): NextHandleFunction => {
+type VitePrismMiddlewareOptions = {
+  config: Partial<PrismPluginOptions>;
+  prismPath?: string;
+};
+
+export const createVitePrismMiddleware = ({ prismPath, config }: VitePrismMiddlewareOptions): NextHandleFunction => {
   return async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
     if (!req.method || !req.url || !req.url.startsWith(prismPath)) {
       next();
     } else {
       // @ts-ignore
       const { body } = req;
-      createPrismMiddleware({ req, res, prismPath, body, config });
+      createPrismMiddleware({ req, res, body, config, prismPath });
     }
   };
 };
