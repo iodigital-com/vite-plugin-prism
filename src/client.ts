@@ -61,7 +61,6 @@ export type PrismConfig = IHttpConfig & {
 export interface PrismPluginOptions {
   route?: string;
   specFilePathOrObject: string | string[] | object | object[];
-  interceptorDir?: string;
   prismConfig?: Partial<PrismConfig>;
   debug?: boolean;
   interceptors?: Record<string, PrismResponseInterceptor<any, any>>;
