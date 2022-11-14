@@ -1,7 +1,7 @@
 import type { IHttpOperation, IHttpRequest } from "@stoplight/types";
 import type { PromiseType, Overwrite } from "utility-types";
 import { PrismHttp } from "@stoplight/prism-http/dist/client.js";
-import { camelCase } from "lodash";
+import camelCase from "lodash/camelCase.js";
 import { PrismPluginOptions } from "./client.js";
 import chalk from "chalk";
 
