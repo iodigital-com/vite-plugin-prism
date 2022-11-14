@@ -1,27 +1,57 @@
-import * as fs from "fs/promises";
+import type { IHttpOperation, IHttpRequest } from "@stoplight/types";
+import type { PromiseType, Overwrite } from "utility-types";
+import { PrismHttp } from "@stoplight/prism-http/dist/client.js";
+import { camelCase } from "lodash-es";
+import { PrismPluginOptions } from "./client.js";
+import chalk from "chalk";
 
-export const f = async ({config, operation, mockedResponse}) => {
-    // intercept here plz
-    if (config.responseInterceptors) {
-        try {
-            const stat = await fs.stat(`${config.responseInterceptors}`);
-            if (stat.isDirectory()) {
-                const path = `${config.responseInterceptors}/${operation.iid}.js`;
-                const interceptorFile = await fs.stat(path);
-                if (interceptorFile.isFile()) {
-                    const interceptor = await import(path);
-                    try {
-                        console.log('Using interceptor for operation ', operation.iid);
-                        return interceptor.interceptor(mockedResponse);
-                    } catch (e) {
-                        console.error("error in interceptor", e);
-                        return mockedResponse;
-                    }
-                }
-            }
-        } catch (e) {
-            console.error(e);
-            return mockedResponse;
-        }
-    }
+export type PrismOutput = PromiseType<ReturnType<PrismHttp["request"]>>;
+
+export interface IHttpRequestTyped<T = void> extends Omit<Partial<IHttpRequest>, "url"> {
+  body?: T;
+}
+
+export type PrismOutputTyped<ResponseBody, RequestBody> = Overwrite<
+  PrismOutput,
+  {
+    data: ResponseBody;
+    request: IHttpRequestTyped<RequestBody>;
+  }
+>;
+
+export type InterceptorContext<T, K> = {
+  output: PrismOutputTyped<T, K>;
+};
+
+export interface PrismResponseInterceptor<T, K> {
+  (ctx: InterceptorContext<T, K>): PrismOutputTyped<T, K> | Promise<PrismOutputTyped<T, K>>;
+}
+
+export function definePrismResponseInterceptor<T = any, K = any>(
+  plugin: PrismResponseInterceptor<T, K>
+): (ctx: InterceptorContext<T, K>) => PrismOutputTyped<T, K> | Promise<PrismOutputTyped<T, K>> {
+  return plugin;
+}
+
+export type PrismResponseInterceptorOptions = {
+  config: Partial<PrismPluginOptions>;
+  operation: IHttpOperation;
+  output: PrismOutputTyped<any, any>;
+};
+
+export async function prismResponseInterceptor({ config, operation, output }: PrismResponseInterceptorOptions) {
+  const { interceptors } = config;
+  const interceptor =
+    interceptors && Object.entries(interceptors).find(([key]) => key === `${camelCase(operation.iid)}Response`)?.[1];
+
+  if (interceptor) {
+    console.debug(
+      "PRISM",
+      chalk.black.bgHex("#818cf8")(`[INTERCEPTOR]`),
+      `Running response interceptor for ${operation.iid}`
+    );
+    const context: InterceptorContext<any, any> = { output };
+    return interceptor(context);
+  }
+  return output;
 }

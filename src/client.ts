@@ -11,6 +11,7 @@ import signale from "signale";
 import split from "split2";
 import { PassThrough, Readable } from "stream";
 import chalk from "chalk";
+import { PrismResponseInterceptor } from "./prism-interceptors.js";
 
 type PrismLogDescriptor = LogDescriptor & { name: keyof typeof LOG_COLOR_MAP; offset?: number; input: IHttpRequest };
 
@@ -60,9 +61,10 @@ export type PrismConfig = IHttpConfig & {
 export interface PrismPluginOptions {
   route?: string;
   specFilePathOrObject: string | string[] | object | object[];
-  responseInterceptors? : string;
+  interceptorDir?: string;
   prismConfig?: Partial<PrismConfig>;
   debug?: boolean;
+  interceptors?: Record<string, PrismResponseInterceptor<any, any>>;
 }
 
 export const getDefaultPrismConfig = (debug?: boolean): Partial<PrismConfig> => {
@@ -96,5 +98,10 @@ export const getPrismClient = async (
   const defaultPrismConfig = getDefaultPrismConfig(debug);
   const requestConfig = { mock: getHttpConfigFromRequest(req).right };
   const mergedConfig = defu(requestConfig, prismConfig, defaultPrismConfig);
-  return createClientFromOperations(operations, mergedConfig);
+  const client = createClientFromOperations(operations, mergedConfig);
+  return {
+    client,
+    config: { ...config, prismConfig: mergedConfig },
+    operations,
+  };
 };

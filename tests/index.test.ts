@@ -51,3 +51,29 @@ test.describe("with-vite", () => {
     }
   });
 });
+
+test.describe("with-interceptors-vite", () => {
+  test("it can fetch a response from API one", async ({ page }) => {
+    await page.goto("http://localhost:3004/api-one/pets");
+    const responseOne = await page.textContent("body");
+
+    if (responseOne) {
+      const jsonOne = JSON.parse(responseOne);
+      expect(Array.isArray(jsonOne)).toEqual(true);
+    } else {
+      expect(responseOne).not.toEqual(null);
+    }
+  });
+
+  test("it can fetch a response from API two", async ({ page }) => {
+    await page.goto("http://localhost:3004/api-two/pets/123");
+    const responseTwo = await page.textContent("body");
+
+    if (responseTwo) {
+      const jsonTwo = JSON.parse(responseTwo);
+      expect(Object.values(jsonTwo).length).toEqual(3);
+    } else {
+      expect(responseTwo).not.toEqual(null);
+    }
+  });
+});

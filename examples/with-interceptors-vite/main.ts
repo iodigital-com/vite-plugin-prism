@@ -9,7 +9,6 @@ fetch(window.location.origin + "/api/pets")
     }
   });
 
-
 fetch(window.location.origin + "/api/pets/123")
   .then((res) => res.json())
   .then((json) => {
