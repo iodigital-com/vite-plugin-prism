@@ -60,6 +60,7 @@ export type PrismConfig = IHttpConfig & {
 export interface PrismPluginOptions {
   route?: string;
   specFilePathOrObject: string | string[] | object | object[];
+  responseInterceptors? : string;
   prismConfig?: Partial<PrismConfig>;
   debug?: boolean;
 }
@@ -76,7 +77,7 @@ export const getDefaultPrismConfig = (debug?: boolean): Partial<PrismConfig> => 
   };
 };
 
-const getHttpOperationsFromSpecs = async (specFilePathOrObject: PrismPluginOptions["specFilePathOrObject"]) => {
+export const getHttpOperationsFromSpecs = async (specFilePathOrObject: PrismPluginOptions["specFilePathOrObject"]) => {
   if (Array.isArray(specFilePathOrObject)) {
     const operationBundles = await Promise.all(
       specFilePathOrObject.map((spec: string | object) => getHttpOperationsFromSpec(spec))

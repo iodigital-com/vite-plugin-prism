@@ -1,7 +1,9 @@
 import { IHttpNameValue, IHttpRequest } from "@stoplight/prism-http";
 import { HttpMethod } from "@stoplight/types";
+import { matchPath } from '@stoplight/prism-http/dist/router/matchPath.js';
 import type { IncomingMessage, ServerResponse } from "http";
-import { getPrismClient, PrismPluginOptions } from "./client.js";
+import { getHttpOperationsFromSpecs, getPrismClient, PrismPluginOptions } from "./client.js";
+import { f } from "./prism-interceptors.js";
 
 interface IPrismMiddlewareOptions {
   req: IncomingMessage;
@@ -9,6 +11,13 @@ interface IPrismMiddlewareOptions {
   prismPath: string;
   body?: unknown;
   config: Partial<PrismPluginOptions>;
+}
+
+const getOperationByRequest = async ({ requestUrl, method, config }) => {
+  const operations = await getHttpOperationsFromSpecs(config.specFilePathOrObject);
+  return operations.filter(operation => {
+    return matchPath(requestUrl, operation.path).right !== 'no-match' && method === operation.method;
+  })[0];
 }
 
 export const createPrismMiddleware = async ({ req, res, prismPath, config, body }: IPrismMiddlewareOptions) => {
@@ -31,9 +40,13 @@ export const createPrismMiddleware = async ({ req, res, prismPath, config, body 
         method: method as HttpMethod,
         body,
       })
-      .then((mockedResponse) => {
-        res.writeHead(mockedResponse.status, { ...mockedResponse.headers });
-        res.end(JSON.stringify(mockedResponse.data));
+      .then(async (mockedResponse) => {
+        // get the operation from this response
+        const operation = await getOperationByRequest({ requestUrl, method, config });
+        // use it to get the interceptor
+        const interceptedResponse = await f({ config, operation, mockedResponse });
+        res.writeHead(interceptedResponse.status, { ...interceptedResponse.headers });
+        res.end(JSON.stringify(interceptedResponse.data));
         return res;
       })
       .catch((error) => {
