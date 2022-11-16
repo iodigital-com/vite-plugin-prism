@@ -1,79 +1,78 @@
 import { expect, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
+
+function getApiResponse({ page, url }: { page: Page; url: string }): Promise<{ status: number; json: any }> {
+  return page.evaluate(async (url) => {
+    const response = await fetch(url);
+    const json = await response.json();
+    return { status: response.status, json };
+  }, url);
+}
 
 test.describe("with-multiple", () => {
-  test("it can fetch a response from API one", async ({ page }) => {
-    await page.goto("http://localhost:3001/api-one/pets");
-    const responseOne = await page.textContent("body");
+  const baseUrl = "http://localhost:3001";
 
-    if (responseOne) {
-      const jsonOne = JSON.parse(responseOne);
-      expect(Array.isArray(jsonOne)).toEqual(true);
-    } else {
-      expect(responseOne).not.toEqual(null);
-    }
+  test("it can fetch a response from API one", async ({ page }) => {
+    const url = `${baseUrl}/api-one/pets`;
+    await page.goto(baseUrl);
+    const { status, json } = await getApiResponse({ page, url });
+    expect(status).toEqual(200);
+    expect(Array.isArray(json)).toEqual(true);
+    expect(Object.values(json[0]).length).toEqual(3);
   });
 
   test("it can fetch a response from API two", async ({ page }) => {
-    await page.goto("http://localhost:3001/api-two/pets/123");
-    const responseTwo = await page.textContent("body");
-
-    if (responseTwo) {
-      const jsonTwo = JSON.parse(responseTwo);
-      expect(Object.values(jsonTwo).length).toEqual(3);
-    } else {
-      expect(responseTwo).not.toEqual(null);
-    }
+    const url = `${baseUrl}/api-two/pets/123`;
+    await page.goto(baseUrl);
+    const { status, json } = await getApiResponse({ page, url });
+    expect(status).toEqual(200);
+    expect(Object.values(json).length).toEqual(3);
   });
 });
 
 test.describe("with-nuxt", () => {
-  test("it can fetch a response from api", async ({ page }) => {
-    await page.goto("http://localhost:3002/api/pets");
-    const responseOne = await page.textContent("body");
-    if (responseOne) {
-      const jsonOne = JSON.parse(responseOne);
-      expect(Array.isArray(jsonOne)).toEqual(true);
-    } else {
-      expect(responseOne).not.toEqual(null);
-    }
+  const baseUrl = "http://localhost:3002";
+  test("it can fetch a response from API one", async ({ page }) => {
+    const url = `${baseUrl}/api/pets`;
+    await page.goto(baseUrl);
+    const { status, json } = await getApiResponse({ page, url });
+    expect(status).toEqual(200);
+    expect(Array.isArray(json)).toEqual(true);
+    expect(Object.values(json[0]).length).toEqual(3);
   });
 });
 
 test.describe("with-vite", () => {
-  test("it can fetch a response from api", async ({ page }) => {
-    await page.goto("http://localhost:3003/api/pets");
-    const responseOne = await page.textContent("body");
-    if (responseOne) {
-      const jsonOne = JSON.parse(responseOne);
-      expect(Array.isArray(jsonOne)).toEqual(true);
-    } else {
-      expect(responseOne).not.toEqual(null);
-    }
+  const baseUrl = "http://localhost:3003";
+  test("it can fetch a response from API one", async ({ page }) => {
+    const url = `${baseUrl}/api/pets`;
+    await page.goto(baseUrl);
+    const { status, json } = await getApiResponse({ page, url });
+    expect(status).toEqual(200);
+    expect(Array.isArray(json)).toEqual(true);
+    expect(Object.values(json[0]).length).toEqual(3);
   });
 });
 
 test.describe("with-interceptors-vite", () => {
-  test("it can fetch a response from API one", async ({ page }) => {
-    await page.goto("http://localhost:3004/api-one/pets");
-    const responseOne = await page.textContent("body");
+  const baseUrl = "http://localhost:3004";
 
-    if (responseOne) {
-      const jsonOne = JSON.parse(responseOne);
-      expect(Array.isArray(jsonOne)).toEqual(true);
-    } else {
-      expect(responseOne).not.toEqual(null);
-    }
+  test("it can fetch a response from API one", async ({ page }) => {
+    const url = `${baseUrl}/api/pets`;
+    await page.goto(baseUrl);
+    const { status, json } = await getApiResponse({ page, url });
+    expect(status).toEqual(200);
+    expect(Array.isArray(json)).toEqual(true);
+    expect(Object.values(json[0]).length).toEqual(4);
+    expect(json[0].name).toEqual("Rambo");
+    expect(json[0].goodBoy).toEqual(true);
   });
 
-  test("it can fetch a response from API two", async ({ page }) => {
-    await page.goto("http://localhost:3004/api-two/pets/123");
-    const responseTwo = await page.textContent("body");
-
-    if (responseTwo) {
-      const jsonTwo = JSON.parse(responseTwo);
-      expect(Object.values(jsonTwo).length).toEqual(3);
-    } else {
-      expect(responseTwo).not.toEqual(null);
-    }
+  test("it can fetch a response from findPets", async ({ page }) => {
+    const url = `${baseUrl}/api/pets/123`;
+    await page.goto(baseUrl);
+    const { status, json } = await getApiResponse({ page, url });
+    expect(status).toEqual(200);
+    expect(json).toEqual("Hello world!");
   });
 });
