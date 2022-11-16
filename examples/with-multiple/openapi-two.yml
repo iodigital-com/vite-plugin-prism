@@ -15,4 +15,4 @@ servers:
   - url: http://petstore.swagger.io/api
 paths:
   /pets/{id}:
-    $ref: 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml#/paths/~1pets~1{id}'
+    $ref: '../fixtures/petstore.yml#/paths/~1pets~1{id}'

@@ -6,8 +6,7 @@ export default defineNuxtConfig({
   modules: [["../../dist/nuxt"]],
   prism: [
     {
-      specFilePathOrObject:
-        "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore-expanded.yaml",
+      specFilePathOrObject: "../fixtures/petstore.yml",
       debug: true,
     },
   ],
