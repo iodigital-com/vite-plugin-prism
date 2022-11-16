@@ -27,7 +27,7 @@ const getOperationByRequest = async ({
   })[0];
 };
 
-export const createPrismMiddleware = async ({ req, res, prismPath, config, body }: IPrismMiddlewareOptions) => {
+export const createPrismMiddleware = async ({ req, res, config, body }: IPrismMiddlewareOptions) => {
   try {
     // Remove dev-server base from URL
     const sanitizedUrl = req?.url.replace(config.route, "");

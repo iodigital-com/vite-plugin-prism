@@ -28,7 +28,7 @@
     "prepare": "husky install && npm run build"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0-rc.9",
+    "@nuxt/kit": "^3.0.0",
     "@stoplight/prism-cli": "^4.10.3",
     "@stoplight/prism-http": "^4.10.3",
     "@stoplight/prism-http-server": "^4.10.3",
