@@ -14,7 +14,7 @@ const vitePluginPrism = (moduleConfig: Partial<PrismPluginOptions>[]): Plugin =>
     devServer.middlewares.use(bodyParser.json({ strict: false }));
     devServer.middlewares.use(bodyParser.raw());
     devServer.middlewares.use(bodyParser.text());
-    devServer.middlewares.use(bodyParser.urlencoded());
+    devServer.middlewares.use(bodyParser.urlencoded({ extended: true }));
 
     moduleConfig.forEach((config) => {
       const resolvedConfig = defu(config, defaultConfig);
