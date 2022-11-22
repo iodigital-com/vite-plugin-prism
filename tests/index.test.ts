@@ -75,4 +75,15 @@ test.describe("with-interceptors-vite", () => {
     expect(status).toEqual(200);
     expect(json).toEqual("Hello world!");
   });
+
+  test("it can fetch a response from operation with query string parameter", async ({ page }) => {
+    const url = `${baseUrl}/api/pets?limit=1`;
+    await page.goto(baseUrl);
+    const { status, json } = await getApiResponse({ page, url });
+    expect(status).toEqual(200);
+    expect(Array.isArray(json)).toEqual(true);
+    expect(Object.values(json[0]).length).toEqual(4);
+    expect(json[0].name).toEqual("Rambo");
+    expect(json[0].goodBoy).toEqual(true);
+  });
 });

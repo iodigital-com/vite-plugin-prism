@@ -13,7 +13,7 @@ interface IPrismMiddlewareOptions {
   config: Partial<PrismPluginOptions>;
 }
 
-const getOperationByRequest = async ({
+const getOperationByRequest = ({
   requestUrl,
   method,
   operations,
@@ -21,10 +21,13 @@ const getOperationByRequest = async ({
   requestUrl: string;
   method: string;
   operations: IHttpOperation[];
-}) => {
-  return operations.filter((operation) => {
-    return matchPath(requestUrl, operation.path).right !== "no-match" && method === operation.method;
-  })[0];
+}): IHttpOperation<false> | undefined => {
+  const matchedOperations = operations.filter((operation) => {
+    const url = requestUrl.split("?")[0];
+    return matchPath(url, operation.path).right !== "no-match" && method === operation.method;
+  });
+  if (matchedOperations.length > 0) return matchedOperations[0];
+  return undefined;
 };
 
 export const createPrismMiddleware = async ({ req, res, config, body }: IPrismMiddlewareOptions) => {
@@ -40,7 +43,7 @@ export const createPrismMiddleware = async ({ req, res, config, body }: IPrismMi
       url: { path: requestUrl },
     };
     const { client, config: fullConfig, operations } = await getPrismClient(config, prismRequest);
-    const operation = await getOperationByRequest({ requestUrl, method, operations });
+    const operation = getOperationByRequest({ requestUrl, method, operations });
 
     return client
       .request(requestUrl, {

@@ -41,10 +41,11 @@ export type PrismResponseInterceptorOptions = {
 
 export async function prismResponseInterceptor({ config, operation, output }: PrismResponseInterceptorOptions) {
   const { interceptors } = config;
-  const interceptor =
-    interceptors && Object.entries(interceptors).find(([key]) => key === `${camelCase(operation.iid)}Response`)?.[1];
 
-  if (interceptor) {
+  const interceptor =
+    interceptors && Object.entries(interceptors).find(([key]) => key === `${camelCase(operation?.iid)}Response`)?.[1];
+
+  if (interceptor && operation) {
     console.log(
       "PRISM",
       chalk.black.bgHex("#818cf8")(`[INTERCEPTOR]`),
@@ -53,5 +54,6 @@ export async function prismResponseInterceptor({ config, operation, output }: Pr
     const context: InterceptorContext<any, any> = { output };
     return interceptor(context);
   }
+
   return output;
 }
