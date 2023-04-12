@@ -1,7 +1,7 @@
 {
   "name": "@iodigital/vite-plugin-prism",
   "description": "Prism, OpenAPI mocking server, integration for Vite",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "author": {
     "name": "iO",
     "website": "https://iodigital.com"
