@@ -58,8 +58,10 @@ export type PrismConfig = IHttpConfig & {
   logger?: pino.Logger;
 };
 
+// TODO move to own file (shared.ts)
 export interface PrismPluginOptions {
   route?: string;
+  pathRewrite?: (path: string) => Promise<string>;
   specFilePathOrObject: string | string[] | object | object[];
   prismConfig?: Partial<PrismConfig>;
   debug?: boolean;
