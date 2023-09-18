@@ -2,6 +2,7 @@ import { IHttpNameValue, IHttpRequest } from "@stoplight/prism-http";
 import { HttpMethod, IHttpOperation } from "@stoplight/types";
 import { matchPath } from "@stoplight/prism-http/dist/router/matchPath.js";
 import type { IncomingMessage, ServerResponse } from "http";
+import { isFunction } from "lodash-es";
 import { getPrismClient, PrismPluginOptions } from "./client.js";
 import { prismResponseInterceptor } from "./prism-interceptors.js";
 
@@ -36,17 +37,20 @@ export const createPrismMiddleware = async ({ req, res, config, body }: IPrismMi
     const sanitizedUrl = req?.url.replace(config.route, "");
     // If sanitizedUrl is an empty string, say it's the root path
     const requestUrl = sanitizedUrl.length ? sanitizedUrl : "/";
+    // If the pathRewrite function is defined, use it to rewrite the URL
+    const rewrittenUrl = isFunction(config.pathRewrite) ? await config.pathRewrite(requestUrl) : requestUrl;
+
     const { headers } = req;
     const method = req.method.toLowerCase();
     const prismRequest: Pick<IHttpRequest, "headers" | "url"> = {
       headers: req.headers as IHttpNameValue,
-      url: { path: requestUrl },
+      url: { path: rewrittenUrl },
     };
     const { client, config: fullConfig, operations } = await getPrismClient(config, prismRequest);
-    const operation = getOperationByRequest({ requestUrl, method, operations });
+    const operation = getOperationByRequest({ requestUrl: rewrittenUrl, method, operations });
 
     return client
-      .request(requestUrl, {
+      .request(rewrittenUrl, {
         headers: headers as IHttpNameValue,
         method: method as HttpMethod,
         body,

@@ -87,3 +87,18 @@ test.describe("with-interceptors-vite", () => {
     expect(json[0].goodBoy).toEqual(true);
   });
 });
+
+test.describe("with-path-rewrite", () => {
+  // OpenAPI doc describes the path as /path/to/rewrite
+  // The mocked API is running at /api-one
+  // The web app request is made to /api-one/full/path/to/rewrite
+  // The path rewrite function should remove the /full prefix (see examples/with-path-rewrite/vite.config.ts#L18)
+  const baseUrl = "http://localhost:3005";
+  test("it can fetch a response from API one", async ({ page }) => {
+    const url = `${baseUrl}/api-one/full/path/to/rewrite`;
+    await page.goto(baseUrl);
+    const { status, json } = await getApiResponse({ page, url });
+    expect(status).toEqual(200);
+    expect(typeof json).toEqual("string");
+  });
+});

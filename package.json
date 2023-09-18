@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0",
+    "@stoplight/prism-core": "^4.10.3",
     "@stoplight/prism-cli": "^4.10.3",
     "@stoplight/prism-http": "^4.10.3",
     "@stoplight/prism-http-server": "^4.10.3",
@@ -36,7 +37,7 @@
     "chalk": "^5.1.2",
     "defu": "^6.1.0",
     "h3": "^0.7.21",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "pino": "^8.5.0",
     "pino-pretty": "^9.1.1",
     "signale": "^1.4.0",
